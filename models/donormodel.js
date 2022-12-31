@@ -19,3 +19,4 @@ const minimumLimit= function(val) {
     return val.length == 10;
 }
 const Donor = Mongoose.model("Donor", donorSchema);
+module.exports = Donor;
