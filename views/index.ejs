@@ -12,47 +12,13 @@
    <title></title>
  </head>
  <body>
-   <nav class="navbar">
-     <!-- LOGO -->
-     <div class="logo"></div>
-     <!-- NAVIGATION MENU -->
-     <!-- <ul class="nav-links"> -->
-       <!-- USING CHECKBOX HACK -->
-       <input type="checkbox" id="checkbox_toggle" />
-       <label for="checkbox_toggle" class="hamburger">&#9776;</label>
-       <!-- NAVIGATION MENUS -->
-
-        <li class="home"><a href="/" class="hyp">Home</a></li>
-         <li class="services">
-           <a href="/"><img src="user.png" class="profile" alt=""></a>
-           <!-- DROPDOWN MENU -->
-           <ul class="dropdown">
-             <li><a href="/" class="hyp" >My Profile</a></li>
-             <li><a href="/" class="hyp">Update Profile</a></li>
-           </ul>
-         </li>
-
-     </ul>
-   </nav>
-   <h1 ></h1>
-<button class="open-button btn btn-outline-dark" onclick="openForm()">ADD TASK</button>
 
 
 <form action="/requirement" method ="post">
-    <input type="text" placeholder="blood-grp" name="blood-grp" required>
+    <input type="text" placeholder="bloodtype" name="bloodtype" required>
     <input type="text" placeholder="city" name="city" required>
     <button type="submit" class="btn" name="button" >Search</button>
 </form>
-<script>
-    function openForm() {
-      document.getElementById("myForm").style.display = "block";
-    }
-    
-    function closeForm() {
-      document.getElementById("myForm").style.display = "none";
-    }
-    var date=new Date();
-    </script>
-     
+  
    </body>
   </html>

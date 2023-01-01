@@ -8,7 +8,8 @@ const connectDB = require("./models/db");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
-const hospital = require("./models/model");
+const {Hospital} = require("./models/model");
+const {Blood_Group} = require("./models/model");
 const Donor =require("./models/donormodel");
 
 connectDB();
@@ -30,19 +31,42 @@ function getCompatibleBloodTypes(bloodType) {
     };
     return compatibility[bloodType];
 }
-class hospitalDetail{
-    constructor(){
-
+class CompBloodUnit{
+    constructor(blood,unit){
+        this.blood=blood,
+        this.unit=unit
     }
 }
-
-function showBloodUnit(hospitals, Comp_Blood){
-    for(let i=0; i<hospitals.length; i++){
-        let hospital = hospitals[i];
-        for(let j=0;j<Comp_Blood.length;j++){
-            let 
-        }
+class HospitalandCompBlood{
+    constructor(hosp,compatibleBlood){
+        this.hosp = hosp,
+        this.compatibleBlood = compatibleBlood
     }
+}
+function BloodUnit(hospitals, Comp_Blood){
+    const HospitalDetails = []
+    for(let i=0; i<hospitals.length; i++){
+        const hospital = hospitals[i];
+        const bloodgroup_unit = hospital.BloodGroup;
+        
+        let n = Comp_Blood.length
+        const bloodUnitHospital = []
+        for(let j=0;j<n;j++){
+            const CompUnit = new CompBloodUnit(
+                blood= Comp_Blood[j],
+                unit = bloodgroup_unit[Comp_Blood[j]]
+            )
+            bloodUnitHospital[j]=CompUnit;
+            console.log(Comp_Blood[j]);
+            console.log(bloodgroup_unit[Comp_Blood[j]]);
+        }
+        const HospitalBlood = new HospitalandCompBlood(
+            hosp = hospital,
+            compatibleBlood =bloodUnitHospital
+        );
+        HospitalDetails[i] = HospitalBlood;
+    }
+    return HospitalDetails
   }
   
 app.get("/",function(req,res){
@@ -58,13 +82,17 @@ app.get("/donor",function(req,res){
 app.post("/requirement",function(req,res){
     let bloodtype = req.body.bloodtype;
     let city = req.body.city;
+    const Comp_Blood = getCompatibleBloodTypes(bloodtype);
+    Hospital.find({city:city},function(err,hospitals){
+        if(err){
+            console.log(err)
+        }
+        console.log(hospitals);
+        const HospitalDetails = BloodUnit(hospitals,Comp_Blood);
+        res.send(HospitalDetails)
+    });
 
-    let hospitals=hospital.find({city:city});
-    let Comp_Blood = getCompatibleBloodTypes(bloodtype);
-
-    console.log(hospitals[0]);
-    showBloodUnit(hospitals,Comp_Blood);
-    res.send()
+    
 });
 
 app.post("/donor",function(req,res){

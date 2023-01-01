@@ -31,8 +31,15 @@ const BloodTypeSchema = ({
 const HospitalSchema =({
     username: {
       type: String,
-     
+      unique:true,
       required: true
+    },
+    name:{
+      type:String
+    },
+    city:{
+      type:String,
+      required:true
     },
     password: {
       type: String,
@@ -53,17 +60,20 @@ const HospitalSchema =({
     ContactNumber:{
       type:Number,
       length:10,
-      required:true
+      //required:true
     },
     address:{
-      type:String
+      type:String,
     },
-    BloodGroups: {
-        type:BloodTypeSchema
+    BloodGroup: {
+      type:BloodTypeSchema
     }
   });
 
 
 const Hospital = Mongoose.model("Hospital", HospitalSchema);
-const blood_group = Mongoose.model("Blood_Group", BloodTypeSchema);
-module.exports = Hospital;
+const Blood_Group = Mongoose.model("Blood_Group", BloodTypeSchema);
+module.exports = {
+  Hospital:Hospital,
+  Blood_Group:Blood_Group
+}
