@@ -1,6 +1,10 @@
 const { string } = require("i/lib/util");
 const Mongoose = require("mongoose");
 
+const minimumLimit= function(val) {
+    return val.length == 10;
+}
+
 const donorSchema = ({
     first_name: String,
     last_name:String,
@@ -15,8 +19,6 @@ const donorSchema = ({
 
 })
 
-const minimumLimit= function(val) {
-    return val.length == 10;
-}
+
 const Donor = Mongoose.model("Donor", donorSchema);
 module.exports = Donor;

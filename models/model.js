@@ -1,6 +1,33 @@
 const { string } = require("i/lib/util");
 const Mongoose = require("mongoose");
 
+const BloodTypeSchema = ({
+  A_pos :{
+      type:Number,
+  },
+  A_neg :{
+      type:Number,
+  },
+  B_pos :{
+      type:Number,
+  },
+  O_pos :{
+      type:Number,
+  },
+  AB_pos :{
+      type:Number,
+  },
+  B_neg :{
+      type:Number,
+  },
+  O_neg :{
+      type:Number,
+  },
+  AB_neg :{
+      type:Number,
+  },
+});
+
 const HospitalSchema =({
     username: {
       type: String,
@@ -36,32 +63,7 @@ const HospitalSchema =({
     }
   });
 
-const BloodTypeSchema = ({
-    A_pos :{
-        type:Number,
-    },
-    A_neg :{
-        type:Number,
-    },
-    B_pos :{
-        type:Number,
-    },
-    O_pos :{
-        type:Number,
-    },
-    AB_pos :{
-        type:Number,
-    },
-    B_neg :{
-        type:Number,
-    },
-    O_neg :{
-        type:Number,
-    },
-    AB_neg :{
-        type:Number,
-    },
-})
+
 const Hospital = Mongoose.model("Hospital", HospitalSchema);
 const blood_group = Mongoose.model("Blood_Group", BloodTypeSchema);
 module.exports = Hospital;
