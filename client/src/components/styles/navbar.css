@@ -1,0 +1,17 @@
+nav{
+  margin: 2vh 10vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+
+nav div a{
+  padding: 0 2vw;
+  margin: 0 1vw;
+  border: 2px solid black;
+  border-radius: 5px;
+  text-decoration: none;
+}
+

@@ -1,7 +1,11 @@
 import React from "react";
+import BloodForm from "../components/bloodform";
 
-function HospitalLogin(){
-  return (<div></div>);
+function Home(){
+  return (<div class='main'>
+   <BloodForm></BloodForm>
+   <p>SUPPPPPP?</p>
+  </div>);
 }
 
-export default HospitalLogin
+export default Home
