@@ -9,8 +9,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
 const {Hospital} = require("./models/model");
-const {Blood_Group} = require("./models/model");
+
 const Donor =require("./models/donormodel");
+
 
 connectDB();
 
@@ -31,20 +32,24 @@ function getCompatibleBloodTypes(bloodType) {
     };
     return compatibility[bloodType];
 }
+
 class CompBloodUnit{
     constructor(blood,unit){
         this.blood=blood,
         this.unit=unit
     }
 }
+
 class HospitalandCompBlood{
     constructor(hosp,compatibleBlood){
         this.hosp = hosp,
         this.compatibleBlood = compatibleBlood
     }
 }
+
 function BloodUnit(hospitals, Comp_Blood){
-    const HospitalDetails = []
+
+    const HospitalDetails = [];
     for(let i=0; i<hospitals.length; i++){
         const hospital = hospitals[i];
         const bloodgroup_unit = hospital.BloodGroup;
@@ -62,11 +67,12 @@ function BloodUnit(hospitals, Comp_Blood){
         }
         const HospitalBlood = new HospitalandCompBlood(
             hosp = hospital,
-            compatibleBlood =bloodUnitHospital
+            compatibleBlood = bloodUnitHospital
         );
         HospitalDetails[i] = HospitalBlood;
     }
     return HospitalDetails
+
   }
   
 app.get("/",function(req,res){
@@ -80,6 +86,7 @@ app.get("/donor",function(req,res){
 });
 
 app.post("/requirement",function(req,res){
+
     let bloodtype = req.body.bloodtype;
     let city = req.body.city;
     const Comp_Blood = getCompatibleBloodTypes(bloodtype);
@@ -91,15 +98,38 @@ app.post("/requirement",function(req,res){
         const HospitalDetails = BloodUnit(hospitals,Comp_Blood);
         res.send(HospitalDetails)
     });
-
-    
+  
 });
 
 app.post("/donor",function(req,res){
 
-})
+    phone_number = res.body.phoneNumber;
+    if(CheckPhoneNumber(phone_number)){
+    const donor = new Donor({
+        first_name:req.body.first_name,
+        last_name:req.body.last_name,
+        blood_group:req.body.blood_group,
+        age:req.body.age,
+        city:req.body.city,
+        phoneNumber:req.body.phoneNumber
+    });
+    donor.save(function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+    Hospital.find({city:donor.city},function(err,hospital){
+        res.send(hospital);
+    });
+}
+else{
+    res.send();
+}
 
+});
 
-  app.listen(process.env.PORT || 3000, function() {
+app.listen(process.env.PORT || 3000, function() {
+
     console.log("Server started on port 3000");
+
 });
