@@ -11,13 +11,14 @@ const donorSchema = ({
     blood_group:String,
     age: Number,
     city:String,
-    phone:{
+    phoneNumber:{
         type :Number,
-        index: true, unique: true,
+        index: true,
+        unique: true,
         validate: [minimumLimit, 'Enter at least one phone number']
     }
 
-})
+});
 
 
 const Donor = Mongoose.model("Donor", donorSchema);
