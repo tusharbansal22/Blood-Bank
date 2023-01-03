@@ -5,7 +5,7 @@ import "./styles/navbar.css"
 function Navbar(){
   return(<div>
     <nav>
-      <Link to="/">logo</Link>
+      <Link to="/">🩸</Link>
       <div>
       <Link to="/hospital">Hospital</Link>
       <Link to="/donor">Donor</Link>
