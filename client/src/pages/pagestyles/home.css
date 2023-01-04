@@ -54,3 +54,19 @@
   color: white;
   border-radius: 12px;
 }
+
+.hlogin-div{
+  align-items: center;
+}
+ 
+#hospital-login-text{
+  font-size: 64px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.box{
+  border: 2px solid gray;
+  border-radius: 12px;
+  padding-bottom: 50px;
+}
