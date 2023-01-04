@@ -1,10 +1,14 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const router=express.Router();
-
+const { restrictToAdmin } = require("../middlewares");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const Admin = require("../models/Admin");
 const BloodBank = require("../models/BloodBank");
 const Donor = require("../models/Donor");
+const { restrictToBloodBank } = require("../middlewares");
+const _ = require("lodash");
 
 function getCompatibleBloodTypes(bloodType) {
     // A list of all possible blood types
@@ -38,25 +42,39 @@ class HospitalandCompBlood{
     }
 }
 
+class BloodType{
+    constructor(A_pos,A_neg,B_pos,B_neg,O_pos,O_neg,AB_neg,AB_pos){
+        this.A_pos =A_pos,
+        this.B_pos =B_pos,
+        this.AB_pos =AB_pos,
+        this.O_pos =O_pos,
+        this.A_neg =A_neg,
+        this.B_neg =B_neg,
+        this.AB_neg =AB_neg,
+        this.O_neg =O_neg
+    }
+}
 function BloodUnit(bloodbanks, Comp_Blood){
-
+   
+    console.log(Comp_Blood)
     const BloodbankDetails = [];
     for(let i=0; i<bloodbanks.length; i++){
+
         const blood_bank = bloodbanks[i];
         const bloodgroup_unit = blood_bank.BloodGroup;
     
         let n = Comp_Blood.length;
-        
+  
         const bloodUnit_bloodbank = []
         for(let j=0;j<n;j++){
             const CompUnit = new CompBloodUnit(
                 blood= Comp_Blood[j],
                 unit = bloodgroup_unit[Comp_Blood[j]]
-            )
-            console.log(CompUnit);
+             )
+            // console.log(CompUnit);
             bloodUnit_bloodbank[j]=CompUnit;
-            console.log(Comp_Blood[j]);
-            console.log(bloodgroup_unit[Comp_Blood[j]]);
+            // console.log(Comp_Blood[j]);
+            // console.log(bloodgroup_unit[Comp_Blood[j]]);
         }
         const HospitalBlood = new HospitalandCompBlood(
             hosp = blood_bank,
@@ -74,16 +92,17 @@ function BloodUnit(bloodbanks, Comp_Blood){
 
 router.post("/requirement",function(req,res){
 
-    let bloodtype = req.body.blood_group;
+    let bloodtype = req.body.bloodGroup;
     let city = req.body.city;
-    
+
     const Comp_Blood = getCompatibleBloodTypes(bloodtype);
     BloodBank.find({city:city},function(err,bloodbanks){
         if(err){
             console.log(err);
         }
-        console.log(bloodbanks);
+        
         const BloodBankDetails = BloodUnit(bloodbanks,Comp_Blood);
+        console.log(BloodBankDetails)
         res.send(BloodBankDetails);
     });
   
@@ -92,7 +111,7 @@ router.post("/requirement",function(req,res){
 router.post("/donor",function(req,res){
 
     phone_number = res.body.phoneNumber;
-    if(CheckPhoneNumber(phone_number)){
+    
     const donor = new Donor({
         first_name:req.body.first_name,
         last_name:req.body.last_name,
@@ -109,14 +128,54 @@ router.post("/donor",function(req,res){
     BloodBank.find({city:donor.city},function(err,bloodbank){
         res.send(bloodbank);
     });
-}
-else{
-    res.send();
-}
 
 });
 
-router.post("/:bloodBank",function(req,res){
-
+router.post("/:bloodBankemail",restrictToBloodBank,async(req,res) =>{
+    try{
+        const requestedBloodBank = req.params.bloodBankemail;
+        console.log(requestedBloodBank);
+        const RequiredBloodBank= await BloodBank.findOne({ email: requestedBloodBank });
+        
+        return res
+      .cookie("token", token, {
+        httpOnly: true,
+      })
+      .status(201)
+      .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ success: false, message: "process failed" });
+      }
 });
+
+router.post("/:bloodBankemail/update",restrictToBloodBank,async(req,res) =>{
+    try{
+        const requestedBloodBank = req.params.bloodBankemail;
+        const blood_available = res.body;
+        const blood_unit = new BloodType({
+            A_pos:blood_available.A_pos,
+            B_pos:blood_available.B_pos,
+            AB_pos:blood_available.AB_pos,
+            O_pos:blood_available.O_pos,
+            A_neg:blood_available.A_neg,
+            B_neg:blood_available.B_neg,
+            AB_neg:blood_available.AB_neg,
+            O_neg:blood_available.O_neg
+        })
+        const RequiredBloodBank= await BloodBank.findOneAndUpdate({ email: requestedBloodBank },{BloodGroup:blood_unit});
+        
+        return res
+      .cookie("token", token, {
+        httpOnly: true,
+      })
+      .status(201)
+      .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ success: false, message: "process failed" });
+      }
+});
+
+
 module.exports=router;
