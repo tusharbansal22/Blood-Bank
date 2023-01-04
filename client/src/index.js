@@ -10,8 +10,3 @@ root.render(
   </React.StrictMode>
 );
 
-fetch('https://jsonplaceholder.typicode.com/posts')
-  .then((res) => res.json())
-  .then((resJson) => {
-    const data = JSON.parse(resJson)
-  })

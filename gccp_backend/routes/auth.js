@@ -81,7 +81,7 @@ router.post("/loginBloodBank", async (req, res) => {
   try {
     const bloodBank = req.body;
     const bloodBankData = await BloodBank.findOne({ email: bloodBank.email });
-
+    
     if (!bloodBankData) {
       return res
         .status(400)
@@ -103,7 +103,7 @@ router.post("/loginBloodBank", async (req, res) => {
             httpOnly: true,
           })
           .status(200)
-          .json({ success: true, message: "login successful" });
+          .send(bloodBankData);
       } else {
         return res
           .status(400)
