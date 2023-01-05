@@ -70,3 +70,70 @@
   border-radius: 12px;
   padding-bottom: 50px;
 }
+
+.dashboard-text{
+  font-size: 64px;
+  font-weight: 900;
+  text-align: center;
+  font-family: "Poppins";
+  margin: 0px;
+  margin-top: 2%;
+}
+
+.no-margin{
+  margin: 1%;
+  justify-content: start;
+}
+
+.container{
+  margin-left: 4%;
+  margin-top: 2%;
+  margin-right: 3%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  font-family: "Poppins";
+ 
+  width:63%;
+  height:auto;
+  background-color: white;
+  flex-flow: wrap; 
+}
+ 
+.bloody-box{
+  background-color: white;
+  text-align:center;
+  height:140px;
+  width:140px;
+  border:3px solid #fd5e5e;
+  border-radius: 5px 50px 5px ;
+  float: left;
+  margin:35px;
+  background-color: #fd5e5e;
+}
+
+.blood-group{
+  font-family: "Poppins";
+  font-size: 30px;
+  margin-top: 18%;
+  margin-bottom: 0;
+  margin-left: 5%;
+}
+
+.radio-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#add, #sub{
+  margin-right: 5%;
+  font-size: 90%;
+}
+
+.edit-text{
+  margin-top: 0;
+  margin-bottom: 4%;
+  font-family: "Poppins";
+  font-size: 27px;
+}
