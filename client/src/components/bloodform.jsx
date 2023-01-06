@@ -1,17 +1,16 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-
 class BloodForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       city:"",
-      bloodGroup: ''};
+      blood_group: ''};
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
+  
   handleChange(event) {
     const target = event.target;
     const value =  target.value;
@@ -22,11 +21,10 @@ class BloodForm extends React.Component {
     this.setState({
       [name]: value
     });
-    
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.bloodGroup);
+    alert('A name was submitted: ' + this.state.blood_group);
     event.preventDefault();
     let res =  axios({
       method: 'post',
@@ -59,7 +57,7 @@ class BloodForm extends React.Component {
         </div>
         <div >
         <label>
-          <input  className="field" type="text" name="city" value={this.state.city} onChange={this.handleChange} placeholder="Select City"/>
+          <input  className="field" type="text" name="city" value={this.state.city} onChange={this.handleChange} placeholder="Enter your City"/>
         </label>
         </div>
         <input className="submit-button" type="submit" value="Submit" />
