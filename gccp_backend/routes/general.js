@@ -131,23 +131,24 @@ router.post("/donor",function(req,res){
 
 });
 
-router.post("/:bloodBankemail",restrictToBloodBank,async(req,res) =>{
+router.get("/:bloodBankemail",restrictToBloodBank,async(req,res) =>{
     try{
         const requestedBloodBank = req.params.bloodBankemail;
         console.log(requestedBloodBank);
         const RequiredBloodBank= await BloodBank.findOne({ email: requestedBloodBank });
         
-        return res
-      .cookie("token", token, {
-        httpOnly: true,
-      })
-      .status(201)
-      .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup});
+        return res.send(RequiredBloodBank)
+    //   .cookie("token", token, {
+    //     httpOnly: true,
+    //   })
+    //   .status(201)
+      //.json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup});
     } catch (error) {
         console.log(error);
         return res.status(400).json({ success: false, message: "process failed" });
       }
 });
+
 
 router.post("/:bloodBankemail/update",restrictToBloodBank,async(req,res) =>{
     try{
