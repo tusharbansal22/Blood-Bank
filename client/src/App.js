@@ -4,6 +4,7 @@ import Navbar from "./components/navbar";
 import Home from "./pages/Home";
 import Dashboard from "./pages/dashboard";
 import HospitalLogin from "./pages/hospitalLogin";
+import Donor from "./pages/donor_page";
 
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
         <Route path="/" element={<Navbar />}>
           <Route index element={<Home />} />
           <Route path="hospital" element={<HospitalLogin />} />
-          <Route path="donor" element={<HospitalLogin />} />
+          <Route path="donor" element={<Donor />} />
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
