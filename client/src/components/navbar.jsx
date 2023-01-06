@@ -8,10 +8,10 @@ function Navbar(){
       <Link to="/">🩸</Link>
       <div>
       <Link to="/hospital">Hospital</Link>
-      <Link to="/donor">Donor</Link>
-      
+      <Link to="/donor">Donor</Link>   
       </div>
     </nav>
+    <hr></hr>
     <Outlet />
   </div>);
 }
