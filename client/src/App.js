@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/dashboard";
 import HospitalLogin from "./pages/hospitalLogin";
 import Donor from "./pages/donor_page";
+import Card from "./components/card";
 
 
 function App() {
