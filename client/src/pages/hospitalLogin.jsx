@@ -1,6 +1,6 @@
 import React from "react";
 import "./pagestyles/home.css";
-// import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import  { useState } from "react";
 import axios from "axios";
 
@@ -31,11 +31,11 @@ function HospitalLogin(){
     }
   }
   
-  // const navigate = useNavigate();
-  // const handleSubmit = event => {
-  //   event.preventDefault();
-  //   navigate('/dashboard');
-  // };
+  const navigate = useNavigate();
+  const handleSubmit = event => {
+    event.preventDefault();
+    navigate('/dashboard');
+  };
 
   return (
   <div class='main'>
@@ -55,7 +55,7 @@ function HospitalLogin(){
       placeholder="Password" 
       onChange={onChangeBloodBankLogin} 
       value={bloodBankLogin.password}/>
-    <input className="submit-button" type="submit" value="Login" onClick={clickBloodBankLogin}/>  
+    <input className="submit-button" type="submit" value="Login" onClick={clickBloodBankLogin, handleSubmit}/>  
     <a href="">Forgot Password?</a>
   </div>
   </div>
