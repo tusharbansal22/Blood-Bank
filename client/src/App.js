@@ -16,7 +16,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="hospital" element={<HospitalLogin />} />
           <Route path="donor" element={<Donor />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="api/general/:bloodBankemail" element={<Dashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>

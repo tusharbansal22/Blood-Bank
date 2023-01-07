@@ -1,5 +1,5 @@
 import React from "react";
-
+import axios from "axios";
 class AddForm extends React.Component {
   constructor(props) {
     super(props);
@@ -24,8 +24,16 @@ class AddForm extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.bloodGroup);
+    // alert('A name was submitted: ' + this.state.bloodGroup);
     event.preventDefault();
+    let res =  axios({
+      method: 'post',
+      url: 'http://localhost:80/api/general/:bloodBankemail',
+      data: this.state,
+      withCredentials:true
+    });
+    let data = res.data;
+    console.log(data);
   }
 
   render() {
@@ -39,14 +47,14 @@ class AddForm extends React.Component {
         <label>
           <select className="field" name="bloodGroup" value={this.state.bloodGroup} onChange={this.handleChange} placeholder="A+">
           <option value="unselected">Select Blood Type</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
+            <option value="A_pos">A+</option>
+            <option value="A_neg">A-</option>
+            <option value="B_pos">B+</option>
+            <option value="B_neg">B-</option>
+            <option value="AB_pos">AB+</option>
+            <option value="AB_neg">AB-</option>
+            <option value="O_pos">O+</option>
+            <option value="O_neg">O-</option>
           </select>
         </label>
         </div>

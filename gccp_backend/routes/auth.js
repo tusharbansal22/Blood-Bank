@@ -98,7 +98,7 @@ router.post("/loginBloodBank", async (req, res) => {
           { _id: bloodBankData._id },
           process.env.JWT_SECRET
         );
-
+          console.log(bloodBankData);
         return res
           .cookie("token", token, {
             httpOnly: true,

@@ -110,11 +110,11 @@ router.post("/requirement",function(req,res){
 
 router.post("/donor",function(req,res){
 
-    phone_number = res.body.phoneNumber;
-    
+   
+   
     const donor = new Donor({
-        first_name:req.body.first_name,
-        last_name:req.body.last_name,
+        first_name:req.body.firstname,
+        last_name:req.body.lastname,
         blood_group:req.body.blood_group,
         age:req.body.age,
         city:req.body.city,
@@ -126,23 +126,24 @@ router.post("/donor",function(req,res){
         }
     });
     BloodBank.find({city:donor.city},function(err,bloodbank){
+        console.log(bloodbank)
         res.send(bloodbank);
     });
-
+   
 });
 
 router.get("/:bloodBankemail",restrictToBloodBank,async(req,res) =>{
     try{
         const requestedBloodBank = req.params.bloodBankemail;
-        console.log(requestedBloodBank);
+        console.log()
         const RequiredBloodBank= await BloodBank.findOne({ email: requestedBloodBank });
         
-        return res.send(RequiredBloodBank)
-    //   .cookie("token", token, {
-    //     httpOnly: true,
-    //   })
-    //   .status(201)
-      //.json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup});
+        return res
+      .cookie("token", token, {
+        httpOnly: true,
+      })
+      .status(201)
+      .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup});
     } catch (error) {
         console.log(error);
         return res.status(400).json({ success: false, message: "process failed" });

@@ -9,9 +9,7 @@ const donorSchema = ({
     age: Number,
     city:String,
     phoneNumber:{
-        type :Number,
-        index: true,
-        unique: true
+        type :Number 
     }
 
 });

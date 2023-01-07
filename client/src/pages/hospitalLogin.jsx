@@ -13,28 +13,39 @@ function HospitalLogin(){
     setBloodBankLogin({ ...bloodBankLogin, [e.target.name]: e.target.value });
   }
 
-  async function clickBloodBankLogin(e){
-    e.preventDefault();
+  // async function clickBloodBankLogin(e){
+  //   e.preventDefault();
     
-    try {
-      let res = await axios({
-        method: 'post',
-        url: 'http://localhost:80/api/auth/loginBloodBank',
-        data: bloodBankLogin,
-        withCredentials:true
-      });
-  
-      let data = res.data;
-      console.log(data);
-    } catch (error) {
-      console.log(error.response);
-    }
-  }
+  //   try {
+  //     let res = await axios({
+  //       method: 'post',
+  //       url: 'http://localhost:80/api/auth/loginBloodBank',
+  //       data: bloodBankLogin,
+  //       withCredentials:true
+  //     });
+      
+  //    console.log(res.data);
+  //   } catch (error) {
+  //     console.log(error.response);
+  //   }
+  // }
   
   const navigate = useNavigate();
   const handleSubmit = event => {
     event.preventDefault();
-    navigate('/dashboard');
+     axios({
+      method: 'post',
+      url: 'http://localhost:80/api/auth/loginBloodBank',
+      data: bloodBankLogin,
+      withCredentials:true
+    });
+    // let data = res.data;
+    // alert(data);
+    // navigate("/api/general/"+bloodBankLogin.email,{
+    //   state:{
+    //      data,
+    //   }
+    // });
   };
 
   return (
@@ -55,7 +66,7 @@ function HospitalLogin(){
       placeholder="Password" 
       onChange={onChangeBloodBankLogin} 
       value={bloodBankLogin.password}/>
-    <input className="submit-button" type="submit" value="Login" onClick={clickBloodBankLogin, handleSubmit}/>  
+    <input className="submit-button" type="submit" value="Login" onClick={handleSubmit}/>  
     <a href="">Forgot Password?</a>
   </div>
   </div>
