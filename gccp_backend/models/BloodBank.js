@@ -68,8 +68,5 @@ const bloodBankSchema = new mongoose.Schema({
 });
 
 const BloodBank = mongoose.model("BloodBank", bloodBankSchema);
-const BloodType = mongoose.model('BloodType',BloodTypeSchema)
-module.exports = {
-  BloodBank :BloodBank,
-  BloodType:BloodType
-}
+
+module.exports = BloodBank
