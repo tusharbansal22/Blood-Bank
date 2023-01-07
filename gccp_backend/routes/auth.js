@@ -46,6 +46,8 @@ router.post("/loginAdmin", async (req, res) => {
 router.post("/createBloodBank", restrictToAdmin, async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
+  
+    console.log()
     const secPassword = await bcrypt.hash(req.body.password, salt);
     const city = _.lowerCase(req.body.city);
     const bloodBank = new BloodBank({
@@ -79,6 +81,7 @@ router.post("/createBloodBank", restrictToAdmin, async (req, res) => {
 router.post("/loginBloodBank", async (req, res) => {
   try {
     const bloodBank = req.body;
+   
     const bloodBankData = await BloodBank.findOne({ email: bloodBank.email });
 
     if (!bloodBankData) {

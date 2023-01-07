@@ -151,17 +151,16 @@ router.get("/bloodBank", restrictToBloodBank, async (req, res) => {
 
 router.post("/bloodBank/update", restrictToBloodBank, async (req, res) => {
   try {
-    const blood_available = res.body;
-    const blood_unit = new BloodType({
-      A_pos: blood_available.A_pos,
-      B_pos: blood_available.B_pos,
-      AB_pos: blood_available.AB_pos,
-      O_pos: blood_available.O_pos,
-      A_neg: blood_available.A_neg,
-      B_neg: blood_available.B_neg,
-      AB_neg: blood_available.AB_neg,
-      O_neg: blood_available.O_neg,
+    const blood_available = req.body;
+    console.log(blood_available);
+    const RequiredBloodbank = await BloodBank.findById({ _id: req._id });
+    console.log(RequiredBloodbank.BloodGroup);
+    const blood = RequiredBloodbank.BloodGroup;
+    // console.log(req.body);
+    const bld =  await BloodType.findByIdAndUpdate({ _id: blood._id},function(err,bb){
+      bb[blood_available.bloodGroup] = blood_available.unit
     });
+    console.log(bld);
     const RequiredBloodBank = await BloodBank.findByIdAndUpdate(
       { _id: req._id },
       { BloodGroup: blood_unit },

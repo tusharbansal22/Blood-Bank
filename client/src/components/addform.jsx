@@ -4,7 +4,7 @@ class AddForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantity:"",
+      unit:"",
       bloodGroup: ''};
 
     this.handleChange = this.handleChange.bind(this);
@@ -28,7 +28,7 @@ class AddForm extends React.Component {
     event.preventDefault();
     let res =  axios({
       method: 'post',
-      url: 'http://localhost:80/api/general/:bloodBankemail',
+      url: 'http://localhost:80/api/general/bloodBank/update',
       data: this.state,
       withCredentials:true
     });
@@ -39,7 +39,7 @@ class AddForm extends React.Component {
   render() {
     return (
       
-      <form onSubmit={this.handleSubmit}>
+      <form >
       <div>
         <p class="edit-text">Add/Remove blood:</p>
       </div>
@@ -60,18 +60,18 @@ class AddForm extends React.Component {
         </div>
         <div>
         <label>
-          <input className="field" type="number" name="quantity" value={this.state.city} onChange={this.handleChange} placeholder="Enter Quantity"/>
+          <input className="field" type="text" name="unit" value={this.state.unit} onChange={this.handleChange} placeholder="Enter Quantity"/>
         </label>
         </div>
-        <div class="radio-center">
+        {/* <div class="radio-center">
           <label id="add">
             <input type="radio" name="editblood" value="+" />Add
           </label>
           <label id="sub">
             <input type="radio" name="editblood" value="-" />Remove
           </label>
-        </div>
-        <input className="submit-button" type="submit" value="Submit" />
+        </div> */}
+        <input className="submit-button" type="submit" value="Submit" onClick={this.handleSubmit}/>
       </form>
     );
   }

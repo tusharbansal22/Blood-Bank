@@ -2,18 +2,17 @@ import React from "react";
 import "./styles/card.css"
 
 
-function Card(data){
+function Card(){
 
-  const HospitalDetails = data
   
   // const BloodBank = JSON.stringify(HospitalDetails);
-  console.log(HospitalDetails);
+  // console.log(HospitalDetails);
   
     return (
       <div className="card" >
 
         
-        <p>{HospitalDetails[0].city}</p>
+        <p></p>
         <p>Quantity available : 50</p>
 
       </div>
