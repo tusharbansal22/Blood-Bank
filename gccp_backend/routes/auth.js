@@ -13,8 +13,6 @@ router.post("/loginAdmin", async (req, res) => {
   try {
     const admin = req.body;
     const adminData = await Admin.findOne({ email: admin.email });
-    console.log(adminData);
-
     if (!adminData) {
       return res
         .status(400)
@@ -55,7 +53,8 @@ router.post("/createBloodBank", restrictToAdmin, async (req, res) => {
       password: secPassword,
       email: req.body.email,
       city: city,
-      phone: req.body.phone,
+      ContactNumber: req.body.ContactNumber,
+      BloodGroup:{}
     });
 
     const createdBloodBank = await bloodBank.save();

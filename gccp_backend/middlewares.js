@@ -5,7 +5,6 @@ const BloodBank = require("./models/BloodBank");
 exports.restrictToAdmin = async function (req, res, next) {
   try {
     const token = req.cookies.token;
-    console.log(token);
     if (!token) {
       return res
         .status(401)
