@@ -1,55 +1,36 @@
-import React from "react";
+import React,{useContext} from "react";
 import "./pagestyles/home.css";
 import {useNavigate} from 'react-router-dom';
 import  { useState } from "react";
 import axios from "axios";
+import { BloodContext } from "../App";
 
 function HospitalLogin(){
-
+  const {setIsBloodBankLoggedIn}=useContext(BloodContext);
   const [bloodBankLogin, setBloodBankLogin] = useState({email: "", password: "" });
-
+  const navigate = useNavigate();
   function onChangeBloodBankLogin(e) {
     
     setBloodBankLogin({ ...bloodBankLogin, [e.target.name]: e.target.value });
   }
-
-  // async function clickBloodBankLogin(e){
-  //   e.preventDefault();
-    
-  //   try {
-  //     let res = await axios({
-  //       method: 'post',
-  //       url: 'http://localhost:80/api/auth/loginBloodBank',
-  //       data: bloodBankLogin,
-  //       withCredentials:true
-  //     });
-      
-  //    console.log(res.data);
-  //   } catch (error) {
-  //     console.log(error.response);
-  //   }
-  // }
-  
-  const navigate = useNavigate();
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
-     axios({
-      method: 'post',
-      url: 'http://localhost:80/api/auth/loginBloodBank',
-      data: bloodBankLogin,
-      withCredentials:true
-    });
-    // let data = res.data;
-    // alert(data);
-    // navigate("/api/general/"+bloodBankLogin.email,{
-    //   state:{
-    //      data,
-    //   }
-    // });
+    try {
+      await axios({
+        method: 'post',
+        url: 'http://localhost:80/api/auth/loginBloodBank',
+        data: bloodBankLogin,
+        withCredentials:true
+      });
+      setIsBloodBankLoggedIn(true);
+      navigate("/hospitalDashboard");
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   return (
-  <div class='main'>
+  <div className='main'>
   <div className="hlogin-div box">
   <p id="hospital-login-text">Hospital Login</p>
   <div className="form-div" >

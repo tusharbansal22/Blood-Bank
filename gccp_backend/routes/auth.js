@@ -21,7 +21,7 @@ router.post("/loginAdmin", async (req, res) => {
         .json({ success: false, message: "login with correct credentials" });
     } else {
       const match = await bcrypt.compare(admin.password, adminData.password);
-     
+
       if (match) {
         const token = jwt.sign({ _id: adminData._id }, process.env.JWT_SECRET);
 
@@ -45,7 +45,7 @@ router.post("/loginAdmin", async (req, res) => {
   }
 });
 
-router.post("/createBloodBank",restrictToAdmin,async (req, res) => {
+router.post("/createBloodBank", restrictToAdmin, async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const secPassword = await bcrypt.hash(req.body.password, salt);
@@ -54,8 +54,8 @@ router.post("/createBloodBank",restrictToAdmin,async (req, res) => {
       name: req.body.name,
       password: secPassword,
       email: req.body.email,
-      city:city,
-      phone : req.body.phone
+      city: city,
+      phone: req.body.phone,
     });
 
     const createdBloodBank = await bloodBank.save();
@@ -81,8 +81,7 @@ router.post("/loginBloodBank", async (req, res) => {
   try {
     const bloodBank = req.body;
     const bloodBankData = await BloodBank.findOne({ email: bloodBank.email });
-    
-    
+
     if (!bloodBankData) {
       return res
         .status(400)
@@ -98,13 +97,12 @@ router.post("/loginBloodBank", async (req, res) => {
           { _id: bloodBankData._id },
           process.env.JWT_SECRET
         );
-          console.log(bloodBankData);
         return res
           .cookie("token", token, {
             httpOnly: true,
           })
           .status(200)
-          .redirect("http://localhost:80/api/general/"+bloodBank.email);
+          .json({ success: true, message: "login successful" });
       } else {
         return res
           .status(400)
@@ -116,6 +114,24 @@ router.post("/loginBloodBank", async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "internal sever error" });
+  }
+});
+
+router.get("/isBloodBankLoggedIn", async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(200).json({ loggedIn: false });
+    } else {
+      const info = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await BloodBank.findById({ _id: info._id });
+      if (!user) {
+        return res.status(200).json({ loggedIn: false });
+      }
+      return res.status(200).json({ loggedIn: true });
+    }
+  } catch (error) {
+    return res.status(200).json({ loggedIn: false });
   }
 });
 

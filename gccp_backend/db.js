@@ -1,5 +1,5 @@
 const mongoose=require("mongoose");
-const loginDB = 'mongodb://localhost:27017/GCCP';
+const loginDB = 'mongodb+srv://riya:sairam@cluster0.rvezflz.mongodb.net/?retryWrites=true&w=majority';
 
 mongoose.set('strictQuery', true);
 mongoose.connect(loginDB).then(()=>{
