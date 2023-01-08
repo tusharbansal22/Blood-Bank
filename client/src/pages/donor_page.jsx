@@ -124,11 +124,22 @@ function Donor(){
         <br/>
         <label>
             Enter your Blood group:</label><br/>
-            <input className="input" name="blood_group" placeholder="Blood type..."
-            type="text"
-                value={donor.blood_group}
-        onChange={onChangeDonorData}
-            />
+            
+      
+        
+          <select className="field" name="blood_group" value={donor.blood_group} onChange={onChangeDonorData} placeholder="A+">
+          <option value="unselected">Select Blood Type</option>
+            <option value="A_pos">A+</option>
+            <option value="A_neg">A-</option>
+            <option value="B_pos">B+</option>
+            <option value="B_neg">B-</option>
+            <option value="AB_pos">AB+</option>
+            <option value="AB_neg">AB-</option>
+            <option value="O_pos">O+</option>
+            <option value="O_neg">O-</option>
+          </select>
+        
+        
         <br/>
         <br/>
         <input className="submit" type="submit" name="Submit"
