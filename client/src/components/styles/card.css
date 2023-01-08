@@ -1,7 +1,14 @@
 .card{
+  
+  background: rgba(9, 9, 9, 0.22);
+  color: rgb(254, 235, 235);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5.5px);
+  -webkit-backdrop-filter: blur(5.5px);
+  border: 1px solid rgba(89, 89, 89, 0.33);
   width: 40vw;
   height: 10vh;
-  border: 1px solid gray;
-  border-radius: 15px;
   text-align: center;
+  margin: 2.5vh auto;
 }

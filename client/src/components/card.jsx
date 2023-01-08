@@ -31,9 +31,9 @@ function Card(){
   const render_BloodBank = bbs.map((bb)=>
   <div className="card">
 
-              {bb.name}<br></br>
-              {bb.ContactNumber} <br></br>
-              {bb.city} <br></br> 
+              <p>Name : {bb.name}</p>
+              <p>Contact :{bb.ContactNumber} </p>
+              <p>City: {bb.city}</p>  
                 
                 </div>)
     return (
