@@ -103,7 +103,26 @@ function BloodUnit(bloodbanks, Comp_Blood) {
 }
 
 router.post("/requirement", function (req, res) {
-  let bloodtype = req.body.bloodGroup;
+  let bloodtype = req.body.blood_group;
+  let city = req.body.city;
+
+  const Comp_Blood = getCompatibleBloodTypes(bloodtype);
+  BloodBank.find({ city: city }, function (err, bloodbanks) {
+    if (err) {
+      console.log(err);
+    }
+
+    const BloodBankDetails = BloodUnit(bloodbanks, Comp_Blood);
+    console.log(BloodBankDetails);
+    res
+    .cookie('BloodBankDeatils',BloodBankDetails)
+    .send(BloodBankDetails)
+  });
+});
+
+
+router.get("/requirement", function (req, res) {
+  let bloodtype = req.body.blood_group;
   let city = req.body.city;
 
   const Comp_Blood = getCompatibleBloodTypes(bloodtype);

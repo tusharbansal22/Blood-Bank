@@ -50,6 +50,7 @@ router.post("/createBloodBank", restrictToAdmin, async (req, res) => {
     console.log()
     const secPassword = await bcrypt.hash(req.body.password, salt);
     const city = _.lowerCase(req.body.city);
+    
     const bloodBank = new BloodBank({
       name: req.body.name,
       password: secPassword,

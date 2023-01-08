@@ -3,7 +3,10 @@ import BloodForm from "../components/bloodform";
 import "./pagestyles/home.css";
 
 function Home(){
-  return (<div class='main'>
+
+
+
+  return (<div className='main'>
   <div className="welcome-text">
   <p id="welcome-to-text">Welcome To</p>
   <p id="blood-bank-text">Blood Bank</p>

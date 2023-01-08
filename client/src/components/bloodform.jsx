@@ -4,50 +4,46 @@ import { useNavigate , renderMatches } from "react-router-dom";
 
 
 
-class BloodForm extends React.Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      city:"",
-      blood_group: ''};
+function BloodForm()  {
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  const navigate = useNavigate();
+  const [bloodGroupRequired, getBloodBank] = useState({blood_group:"", city: "" });
+
+  function onChangeBloodRequired(e) {
+    getBloodBank({ ...bloodGroupRequired, [e.target.name]: e.target.value });
   }
   
-  handleChange(event) {
-    const target = event.target;
-    const value =  target.value;
-    const name = target.name;
-    console.log(name,value);
-
-
-    this.setState({
-      [name]: value
-    });
+  async function clickBloodRequired(e) {
+    e.preventDefault();
+    try {
+      let res = await axios({
+        method: 'post',
+        url: 'http://localhost:80/api/general/requirement',
+        data: bloodGroupRequired,
+        withCredentials:true
+      });
+  
+      let data = res.data;
+      console.log(data)
+      const cards =data;
+          navigate("/BloodUnitCards",{
+            state:{
+               cards:cards
+            }
+          });
+ 
+     
+    } catch (error) {
+      console.log(error.response);
+    }
   }
   
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.blood_group);
-    event.preventDefault();
-    let res =  axios({
-      method: 'post',
-      url: 'http://localhost:80/api/general/requirement',
-      data: this.state,
-      withCredentials:true
-    });
-    let data = res.data;
-    
-  }
-
-  render() {
     return (
       
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={clickBloodRequired}>
       <div>
         <label>
-          <select className="field" name="bloodGroup" value={this.state.bloodGroup} onChange={this.handleChange} placeholder="A+">
+          <select className="field" name="blood_group" value={bloodGroupRequired.blood_group} onChange={onChangeBloodRequired} placeholder="A+">
           <option value="unselected">Select Blood Type</option>
             <option value="A_pos">A+</option>
             <option value="A_neg">A-</option>
@@ -62,14 +58,16 @@ class BloodForm extends React.Component {
         </div>
         <div >
         <label>
-          <input  className="field" type="text" name="city" value={this.state.city} onChange={this.handleChange} placeholder="Enter your City"/>
+          <input  className="field" type="text" name="city" value={bloodGroupRequired.city} onChange={onChangeBloodRequired} placeholder="Enter your City"/>
         </label>
         </div>
         <input className="submit-button" type="submit" value="Submit" />
+
+
       </form>
      
     );
   }
-}
+
 
 export default BloodForm;

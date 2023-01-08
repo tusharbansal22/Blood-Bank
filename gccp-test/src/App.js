@@ -3,7 +3,7 @@ import axios from "axios";
 
 function App() {
   const [adminLogin, setAdminLogin] = useState({email: "", password: "" });
-  const [createBloodBank, setCreateBloodBank] = useState({ name: "", email: "", password: "" });
+  const [createBloodBank, setCreateBloodBank] = useState({ name: "", email: "", password: "",ContactNumber:"",city:"" });
   const [bloodBankLogin, setBloodBankLogin] = useState({email: "", password: "" });
   const [bloodGroupRequired, getBloodBank] = useState({blood_group:"", city: "" });
 
@@ -130,6 +130,20 @@ function App() {
         type="text"
       />
       <input
+        value={createBloodBank.city}
+        onChange={onChangeCreateBloodBank}
+        placeholder="city"
+        name="city"
+        type="text"
+      />
+      <input
+        value={createBloodBank.ContactNumber}
+        onChange={onChangeCreateBloodBank}
+        placeholder="ContactNumber"
+        name="ContactNumber"
+        type="Number"
+      />
+      <input
         type="submit"
         value="Create Blood Bank"
         onClick={clickCreateBloodBank}
@@ -170,6 +184,14 @@ function App() {
         name="city"
         type="text"
       />
+      <input
+        value={bloodGroupRequired.city}
+        onChange={onChangeBloodRequired}
+        placeholder="city"
+        name="city"
+        type="text"
+      />
+      
       <input
         type="submit"
         value="Blood Bank Login"
