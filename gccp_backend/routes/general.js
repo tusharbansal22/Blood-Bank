@@ -134,8 +134,18 @@ router.post("/donor", function (req, res) {
   });
   BloodBank.find({ city: donor.city }, function (err, bloodbank) {
     console.log(bloodbank);
-    res.send(bloodbank);
+
+    res.cookie('bloodbank',{bloodbank}, {
+      httpOnly: true,
+    }).send(bloodbank)
   });
+});
+
+router.get("/donor", async (req, res)=> {
+  
+  const bbs  = req.cookies;
+  console.log(bbs)
+  return bbs;
 });
 
 router.get("/bloodBank", restrictToBloodBank, async (req, res) => {

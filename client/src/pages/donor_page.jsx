@@ -2,18 +2,21 @@ import React, { useState, useEffect  } from "react";
 import axios from "axios";
 import "./pagestyles/donor_page.css"
 import Card from "../components/card";
+import { useNavigate , renderMatches } from "react-router-dom";
 
 
 function Donor(){
 
     const [donor, donorData] = useState({firstname:"", lastname: "",blood_group:"",age:"",phoneNumber:"", city: "" });
     const [Bloodbank,set_Bloodbank]= useState("");
+    const navigate = useNavigate();
     function onChangeDonorData(e) {
         donorData({ ...donor, [e.target.name]: e.target.value });
       }
 
       async function onChangeSubmit(e) {
         e.preventDefault();
+        
         try {
           let res = await axios({
             method: 'post',
@@ -21,14 +24,21 @@ function Donor(){
             data: donor,
             withCredentials:true
           });
-      
+          console.log(res.data)
+          const cards = res.data
+          navigate("/card",{
+            state:{
+               cards:cards
+            }
+          });
         //  console.log(res.data[0]);
-         for(let i=0;i<res.data.length;i++){
-            set_Bloodbank(res.data[i].name);
-         }
-          
-       
-          
+        //  for(let i=0;i<res.data.length;i++){
+        //     set_Bloodbank(res.data[i]);
+         
+        //  }
+         console.log(res.data);
+         
+         
     
         }catch (error) {
           console.log(error.response);
@@ -125,10 +135,12 @@ function Donor(){
         onClick={onChangeSubmit} />
         </form>
         </div>
-        <Card></Card>
+        
+      
         </div>
         
     )
+  
 }
 
 export default Donor;

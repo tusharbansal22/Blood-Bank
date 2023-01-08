@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/dashboard";
 import HospitalLogin from "./pages/hospitalLogin";
 import Donor from "./pages/donor_page";
+import Card from "./components/card";
 
 const BloodContext = createContext();
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="hospital" element={<HospitalLogin />} />
           <Route path="donor" element={<Donor />} />
           <Route path="hospitalDashboard" element={<Dashboard />} />
+          <Route path="card" element={<Card/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
