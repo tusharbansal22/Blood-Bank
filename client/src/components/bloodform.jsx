@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate , renderMatches } from "react-router-dom";
+
+
+
 class BloodForm extends React.Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +27,7 @@ class BloodForm extends React.Component {
       [name]: value
     });
   }
-
+  
   handleSubmit(event) {
     alert('A name was submitted: ' + this.state.blood_group);
     event.preventDefault();
@@ -33,7 +38,7 @@ class BloodForm extends React.Component {
       withCredentials:true
     });
     let data = res.data;
-    console.log(data);
+    
   }
 
   render() {
@@ -62,6 +67,7 @@ class BloodForm extends React.Component {
         </div>
         <input className="submit-button" type="submit" value="Submit" />
       </form>
+     
     );
   }
 }

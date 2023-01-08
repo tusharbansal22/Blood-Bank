@@ -8,10 +8,10 @@ import { useLocation } from "react-router-dom";
 function Card(){
 
   const {state} = useLocation();
-  console.log(state)
+
 
   const bbs  = state.cards
-  console.log(bbs);
+
 //   const [loading, setLoading] = useState(false);
 //   const [Bloodbanks,set_Bloodbanks]= useState("");
 //   useEffect(()=>{
