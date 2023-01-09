@@ -1,9 +1,9 @@
-const mongoose=require("mongoose");
-const loginDB = 'mongodb://localhost:27017/GCCP';
+const path = require("path");
+const Firestore = require('@google-cloud/firestore');
 
-mongoose.set('strictQuery', true);
-mongoose.connect(loginDB).then(()=>{
-    console.log("connection successful to DB");
-}).catch((err)=>{
-    console.log(err);
+const db = new Firestore({
+  projectId: process.env.PROJECT_ID,
+  keyFilename: path.join(__dirname,'./keyfile.json'),
 });
+
+module.exports = db;
