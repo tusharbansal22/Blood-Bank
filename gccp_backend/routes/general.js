@@ -5,7 +5,7 @@ const router = express.Router();
 const { restrictToBloodBank } = require("../middlewares");
 const _ = require("lodash");
 // import { donors, doc, setDoc } from "firebase/firestore"; 
-
+const db = require("../db");
 
 
 function getCompatibleBloodTypes(bloodType) {
@@ -185,6 +185,11 @@ try{
       httpOnly: true,
     }).send(bloodbanks)
   
+}catch(error){
+  console.log(error);
+  return res
+  .status(500)
+  .json({ success: false, message: "internal sever error" });
 }
 });
 
@@ -198,8 +203,9 @@ router.get("/donor", async (req, res)=> {
 router.get("/bloodBank", restrictToBloodBank, async (req, res) => {
   try {
     const BloodBank = db.collection('bloodbanks');
-    console.log(req._id);
-    const RequiredBloodBank = await BloodBank.where({ doc.id,'==' ,req._id });
+    console.log(req.id);
+    const id = req.id;
+    const RequiredBloodBank = await BloodBank.where('id', '==',id ).get();
     return res
       .status(200)
       .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup });
@@ -212,8 +218,10 @@ router.get("/bloodBank", restrictToBloodBank, async (req, res) => {
 router.post("/bloodBank/update", restrictToBloodBank, async (req, res) => {
   try {
     const blood_available = req.body;
-    const RequiredBloodbank = await BloodBank.findById({ _id: req._id });
-    const blood = RequiredBloodbank.BloodGroup;
+    const BloodBank = db.collection('bloodbanks');
+    const RequiredBloodBank = await BloodBank.where('id', '==',id ).get();
+
+    const blood = RequiredBloodBank.BloodGroup;
     blood[blood_available.bloodGroup] =blood_available.unit;
 
     var blood_unit = new BloodType({
@@ -228,11 +236,7 @@ router.post("/bloodBank/update", restrictToBloodBank, async (req, res) => {
     });
     blood_unit[blood_available] = parseInt(blood_available.unit);
 
-    const RequiredBloodBank = await BloodBank.findByIdAndUpdate(
-      { _id: req._id },
-      { BloodGroup: blood_unit },
-      
-    );
+    const RequiredBloodBank2 = await BloodBank.where('id', '==',id ).get();
 
     return res
       .status(200)
