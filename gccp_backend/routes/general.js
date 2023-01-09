@@ -1,13 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const router = express.Router();
-const { restrictToAdmin } = require("../middlewares");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const Admin = require("../models/Admin");
-const BloodBank = require("../models/BloodBank");
-const BloodType = require("../models/BloodType");
-const Donor = require("../models/Donor");
 const { restrictToBloodBank } = require("../middlewares");
 const _ = require("lodash");
 
@@ -59,18 +52,6 @@ class HospitalandCompBlood {
   }
 }
 
-// class BloodType {
-//   constructor(A_pos, A_neg, B_pos, B_neg, O_pos, O_neg, AB_neg, AB_pos) {
-//     (this.A_pos = A_pos),
-//       (this.B_pos = B_pos),
-//       (this.AB_pos = AB_pos),
-//       (this.O_pos = O_pos),
-//       (this.A_neg = A_neg),
-//       (this.B_neg = B_neg),
-//       (this.AB_neg = AB_neg),
-//       (this.O_neg = O_neg);
-//   }
-// }
 function BloodUnit(bloodbanks, Comp_Blood) {
   console.log(Comp_Blood);
   const BloodbankDetails = [];
@@ -86,10 +67,7 @@ function BloodUnit(bloodbanks, Comp_Blood) {
         (blood = Comp_Blood[j]),
         (unit = bloodgroup_unit[Comp_Blood[j]])
       );
-      // console.log(CompUnit);
       bloodUnit_bloodbank[j] = CompUnit;
-      // console.log(Comp_Blood[j]);
-      // console.log(bloodgroup_unit[Comp_Blood[j]]);
     }
     const HospitalBlood = new HospitalandCompBlood(
       (hosp = blood_bank),
@@ -183,13 +161,9 @@ router.get("/bloodBank", restrictToBloodBank, async (req, res) => {
 router.post("/bloodBank/update", restrictToBloodBank, async (req, res) => {
   try {
     const blood_available = req.body;
-    // console.log(blood_available);
     const RequiredBloodbank = await BloodBank.findById({ _id: req._id });
-    // console.log(RequiredBloodbank.BloodGroup);
     const blood = RequiredBloodbank.BloodGroup;
-    // console.log(req.body);
     blood[blood_available.bloodGroup] =blood_available.unit;
-    // console.log(blood_available.bloodGroup);
 
     var blood_unit = new BloodType({
       A_pos: RequiredBloodbank.BloodGroup.A_pos,
