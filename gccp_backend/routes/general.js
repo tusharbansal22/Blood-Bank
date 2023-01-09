@@ -178,7 +178,7 @@ try{
   };
   const d = await donors.add(donor);
   const BloodBank = db.collection('bloodbanks');
-  const bloodbanks = await BloodBank.where('city', '==', d.city).get();
+  const bloodbanks = await BloodBank.where('city', '==', req.body.city).get();
     
   
     res.cookie('bloodbank',{bloodbanks}, {
