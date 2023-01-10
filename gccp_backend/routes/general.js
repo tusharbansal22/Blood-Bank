@@ -7,7 +7,7 @@ const _ = require("lodash");
 // import { donors, doc, setDoc } from "firebase/firestore"; 
 const db = require("../db");
 
-
+const BloodType = require("../models/BloodType")
 function getCompatibleBloodTypes(bloodType) {
   // A list of all possible blood types
   const allBloodTypes = [
@@ -95,14 +95,21 @@ try{
   const BloodBank = db.collection('bloodbanks');
   const Comp_Blood = getCompatibleBloodTypes(bloodtype);
   
-
+  let BBs = [];
   // BloodBank.find({ city: city }, function (err, bloodbanks) {
   //   if (err) {
   //     console.log(err);
   //   }
   const bloodbanks = await BloodBank.where('city', '==', city).get();
+  var i =0;
+  bloodbanks.forEach(doc => {
 
-    const BloodBankDetails = BloodUnit(bloodbanks, Comp_Blood);
+    BBs[i] = doc.data();
+    i++;
+ 
+  });
+
+    const BloodBankDetails = BloodUnit(BBs, Comp_Blood);
     console.log(BloodBankDetails);
     res
     .cookie('BloodBankDeatils',BloodBankDetails)
@@ -122,7 +129,7 @@ try{
 
     try{
       let bloodtype = req.body.blood_group;
-      let city = req.body.city;
+      let city = _.lowerCase(req.body.city);
     
       const BloodBank = db.collection('bloodbanks');
       const Comp_Blood = getCompatibleBloodTypes(bloodtype);
@@ -132,10 +139,11 @@ try{
       //   if (err) {
       //     console.log(err);
       //   }
-      const bloodbanks = await BloodBank.where('city', '==', city).get();
-    
+      const bloodbanks = await BloodBank.get();
+      
         const BloodBankDetails = BloodUnit(bloodbanks, Comp_Blood);
-        console.log(BloodBankDetails);
+       
+        console.log(bloodbanks.data);
         res
         .cookie('BloodBankDeatils',BloodBankDetails)
         .send(BloodBankDetails)
@@ -166,7 +174,9 @@ try{
 
 router.post("/donor", async (req, res)=> {
 try{
-
+  
+  const city = req.body.city
+  console.log(req.body)
   const donors = db.collection('donors');
   const donor = {
     first_name: req.body.firstname,
@@ -178,12 +188,20 @@ try{
   };
   const d = await donors.add(donor);
   const BloodBank = db.collection('bloodbanks');
-  const bloodbanks = await BloodBank.where('city', '==', req.body.city).get();
-    
-  
-    res.cookie('bloodbank',{bloodbanks}, {
+  const bloodbanks = await BloodBank.where('city', '==', city).get();
+    let BBs = [];
+  var i =0;
+  bloodbanks.forEach(doc => {
+
+    BBs[i] = doc.data();
+    i++;
+    console.log(doc.data())
+ 
+  });
+
+    res.cookie('bloodbank',{BBs}, {
       httpOnly: true,
-    }).send(bloodbanks)
+    }).send(BBs)
   
 }catch(error){
   console.log(error);
@@ -203,12 +221,17 @@ router.get("/donor", async (req, res)=> {
 router.get("/bloodBank", restrictToBloodBank, async (req, res) => {
   try {
     const BloodBank = db.collection('bloodbanks');
-    console.log(req.id);
+    
     const id = req.id;
-    const RequiredBloodBank = await BloodBank.where('id', '==',id ).get();
+    const RequiredBloodBank = await BloodBank.doc(id).get();
+    console.log(RequiredBloodBank.data())
+ 
+   const BB = RequiredBloodBank.data();
+     
+ 
     return res
       .status(200)
-      .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup });
+      .json({ success: true, BloodUnit:BB.BloodGroup});
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, message: "process failed" });
@@ -219,28 +242,41 @@ router.post("/bloodBank/update", restrictToBloodBank, async (req, res) => {
   try {
     const blood_available = req.body;
     const BloodBank = db.collection('bloodbanks');
-    const RequiredBloodBank = await BloodBank.where('id', '==',id ).get();
-
-    const blood = RequiredBloodBank.BloodGroup;
-    blood[blood_available.bloodGroup] =blood_available.unit;
-
+    const id = req.id;
+    const RequiredBloodBank = await BloodBank.doc(id).get();
+   
+    const BB = RequiredBloodBank.data();
+    // const blood = BB.BloodGroup;
+    // console.log(blood[blood_available.bloodGroup])
+      
+ 
     var blood_unit = new BloodType({
-      A_pos: RequiredBloodbank.BloodGroup.A_pos,
-      B_pos: RequiredBloodbank.BloodGroup.B_pos,
-      AB_pos: RequiredBloodbank.BloodGroup.AB_pos,
-      O_pos: RequiredBloodbank.BloodGroup.O_pos,
-      A_neg: RequiredBloodbank.BloodGroup.A_neg,
-      B_neg: RequiredBloodbank.BloodGroup.B_neg,
-      AB_neg: RequiredBloodbank.BloodGroup.AB_neg,
-      O_neg: RequiredBloodbank.BloodGroup.O_neg,
+      A_pos:BB.BloodGroup.A_pos,
+      B_pos: BB.BloodGroup.B_pos,
+      AB_pos: BB.BloodGroup.AB_pos,
+      O_pos: BB.BloodGroup.O_pos,
+      A_neg: BB.BloodGroup.A_neg,
+      B_neg: BB.BloodGroup.B_neg,
+      AB_neg: BB.BloodGroup.AB_neg,
+      O_neg: BB.BloodGroup.O_neg,
     });
-    blood_unit[blood_available] = parseInt(blood_available.unit);
-
-    const RequiredBloodBank2 = await BloodBank.where('id', '==',id ).get();
-
+    blood_unit[blood_available.BloodGroup] = parseInt(blood_available.unit);
+    
+    db.collection('bloodbanks').doc(id).update({
+      'BloodGroup.A_pos' : blood_unit.A_pos,
+      'BloodGroup.B_pos': blood_unit.B_pos,
+      'BloodGroup.AB_pos': blood_unit.AB_pos,
+      'BloodGroup.O_pos': blood_unit.O_pos,
+      'BloodGroup.A_neg': blood_unit.A_neg,
+      'BloodGroup.B_neg': blood_unit.B_neg,
+      'BloodGroup.AB_neg': blood_unit.AB_neg,
+      'BloodGroup.O_neg': blood_unit.O_neg
+    
+    })
+   
     return res
       .status(200)
-      .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup });
+      .json({ success: true, BloodUnit:BB.BloodGroup });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, message: "process failed" });
