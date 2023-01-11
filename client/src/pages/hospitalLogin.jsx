@@ -18,7 +18,7 @@ function HospitalLogin(){
     try {
       await axios({
         method: 'post',
-        url: 'http://localhost:80/api/auth/loginBloodBank',
+        url: `${process.env.REACT_APP_SERVER}/api/auth/loginBloodBank`,
         data: bloodBankLogin,
         withCredentials:true
       });

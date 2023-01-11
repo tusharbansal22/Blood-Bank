@@ -11,7 +11,7 @@ function Navbar() {
       try {
         let res = await axios({
           method: "get",
-          url: "http://localhost:80/api/auth/isBloodBankLoggedIn",
+          url: `${process.env.REACT_APP_SERVER}/api/auth/isBloodBankLoggedIn`,
           withCredentials: true,
         });
         setIsBloodBankLoggedIn(res.data.loggedIn);

@@ -18,7 +18,7 @@ function BloodForm()  {
     try {
       let res = await axios({
         method: 'post',
-        url: 'http://localhost:80/api/general/requirement',
+        url: `${process.env.REACT_APP_SERVER}/api/general/requirement`,
         data: bloodGroupRequired,
         withCredentials:true
       });

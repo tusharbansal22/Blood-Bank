@@ -11,29 +11,12 @@ function Card(){
 
 
   const bbs  = state.cards
-
-//   const [loading, setLoading] = useState(false);
-//   const [Bloodbanks,set_Bloodbanks]= useState("");
-//   useEffect(()=>{
-//     const loadPost = async()=>{
-//       setLoading(true);
-    
-//     const response = await axios.get('http://localhost:80/api/general/donor')
-//     set_Bloodbanks(response.data);
-//     setLoading(false);
-//     }
-//     loadPost();
-//  },[])
-//  console.log(Bloodbanks)
-  // const BloodBank = JSON.stringify(HospitalDetails);
-  // console.log(HospitalDetails);
-
   const render_BloodBank = bbs.map((bb)=>
   <div className="card">
 
               <p>Name : {bb.name}</p>
-              <p>Contact :{bb.ContactNumber} </p>
-              <p>City: {bb.city}</p>  
+              <p>Contact : {bb.ContactNumber} </p>
+              <p>City : {bb.city[0].toUpperCase() + bb.city.slice(1)}</p>  
                 
                 </div>)
     return (

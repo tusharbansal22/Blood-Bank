@@ -72,16 +72,9 @@ router.post("/createBloodBank", restrictToAdmin, async (req, res) => {
       }
     };
 
-    const res = await bloodbanksRef.add(bloodBank);
-    const token = jwt.sign(
-      { id: res.id},
-      process.env.JWT_SECRET
-    );
-
+    await bloodbanksRef.add(bloodBank);
+    
     return res
-    .cookie("token", token, {
-      httpOnly: true,
-    })
     .status(201)
     .json({ success: true, message: "process successful" });
   } catch (error) {
@@ -112,6 +105,7 @@ router.post("/loginBloodBank", async (req, res) => {
       );
 
       if (match) {
+        console.log(match)
         const token = jwt.sign(
           { id: bloodBankData.id },
           process.env.JWT_SECRET

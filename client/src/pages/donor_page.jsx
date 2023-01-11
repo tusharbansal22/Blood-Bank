@@ -20,7 +20,7 @@ function Donor(){
         try {
           let res = await axios({
             method: 'post',
-            url: 'http://localhost:80/api/general/donor',
+            url: `${process.env.REACT_APP_SERVER}/api/general/donor`,
             data: donor,
             withCredentials:true
           });

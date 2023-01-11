@@ -1,51 +1,38 @@
 import React from "react";
 import axios from "axios";
-class AddForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      unit:"",
-      bloodGroup: ''};
+import { useState} from "react";
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+function AddForm({updateBlood}){
+  const [bloodData,setBloodData]=useState({bloodGroup:"",bloodUnit:""});
+
+  function handleChange(e) {
+    setBloodData({ ...bloodData, [e.target.name]: e.target.value });
   }
 
-  handleChange(event) {
-    const target = event.target;
-    const value =  target.value;
-    const name = target.name;
-    console.log(name,value);
-
-
-    this.setState({
-      [name]: value
-    });
+  async function handleSubmit(e){
+    e.preventDefault();
+    try {
+      let res = await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_SERVER}/api/general/bloodBank/update`,
+        data: bloodData,
+        withCredentials:true
+      });
+      console.log(res.data)
+      updateBlood(bloodData.bloodGroup,bloodData.bloodUnit);
+    } catch (error) {
+      console.log(error.response);
+    }
   }
-
-  handleSubmit(event) {
-    // alert('A name was submitted: ' + this.state.bloodGroup);
-    event.preventDefault();
-    let res =  axios({
-      method: 'post',
-      url: 'http://localhost:80/api/general/bloodBank/update',
-      data: this.state,
-      withCredentials:true
-    });
-    let data = res.data;
-    console.log(data);
-  }
-
-  render() {
     return (
       
       <form >
       <div>
-        <p class="edit-text">Add/Remove blood:</p>
+        <p className="edit-text">Add/Remove blood:</p>
       </div>
       <div>
         <label>
-          <select className="field" name="bloodGroup" value={this.state.bloodGroup} onChange={this.handleChange} placeholder="A+">
+          <select className="field" name="bloodGroup" value={bloodData.bloodGroup} onChange={handleChange} placeholder="A+">
           <option value="unselected">Select Blood Type</option>
             <option value="A_pos">A+</option>
             <option value="A_neg">A-</option>
@@ -60,21 +47,12 @@ class AddForm extends React.Component {
         </div>
         <div>
         <label>
-          <input className="field" type="text" name="unit" value={this.state.unit} onChange={this.handleChange} placeholder="Enter Quantity"/>
+          <input className="field" type="number" name="bloodUnit" value={bloodData.bloodUnit} onChange={handleChange} placeholder="Enter Quantity"/>
         </label>
         </div>
-        {/* <div class="radio-center">
-          <label id="add">
-            <input type="radio" name="editblood" value="+" />Add
-          </label>
-          <label id="sub">
-            <input type="radio" name="editblood" value="-" />Remove
-          </label>
-        </div> */}
-        <input className="submit-button" type="submit" value="Submit" onClick={this.handleSubmit}/>
+        <input className="submit-button" type="submit" value="Submit" onClick={handleSubmit}/>
       </form>
     );
-  }
-}
+    }
 
 export default AddForm;

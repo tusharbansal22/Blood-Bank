@@ -1,13 +1,9 @@
-// import { donors, doc, setDoc } from "firebase/firestore";
 const express = require("express");
-const bodyParser = require("body-parser");
 const router = express.Router();
 const { restrictToBloodBank } = require("../middlewares");
 const _ = require("lodash");
-// import { donors, doc, setDoc } from "firebase/firestore"; 
 const db = require("../db");
 
-const BloodType = require("../models/BloodType")
 function getCompatibleBloodTypes(bloodType) {
   // A list of all possible blood types
   const allBloodTypes = [
@@ -57,7 +53,6 @@ class HospitalandCompBlood {
 }
 
 function BloodUnit(bloodbanks, Comp_Blood) {
-  console.log(Comp_Blood);
   const BloodbankDetails = [];
   for (let i = 0; i < bloodbanks.length; i++) {
     const blood_bank = bloodbanks[i];
@@ -84,154 +79,65 @@ function BloodUnit(bloodbanks, Comp_Blood) {
   return BloodbankDetails;
 }
 
-router.post("/requirement",async(req, res)=> {
-
-
-
-try{
-  let bloodtype = req.body.blood_group;
-  let city = req.body.city;
-
-  const BloodBank = db.collection('bloodbanks');
-  const Comp_Blood = getCompatibleBloodTypes(bloodtype);
-  
-  let BBs = [];
-  // BloodBank.find({ city: city }, function (err, bloodbanks) {
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  const bloodbanks = await BloodBank.where('city', '==', city).get();
-  var i =0;
-  bloodbanks.forEach(doc => {
-
-    BBs[i] = doc.data();
-    i++;
- 
-  });
-
-    const BloodBankDetails = BloodUnit(BBs, Comp_Blood);
-    console.log(BloodBankDetails);
-    res
-    .cookie('BloodBankDeatils',BloodBankDetails)
-    .send(BloodBankDetails)
-
-  }catch(error){
+router.post("/requirement", async (req, res) => {
+  try {
+    let bloodtype = req.body.blood_group;
+    const city = _.lowerCase(req.body.city);
+    const BloodBank = db.collection("bloodbanks");
+    const Comp_Blood = getCompatibleBloodTypes(bloodtype);
+    const snapshot = await BloodBank.where("city", "==", city).get();
+    let bloodbanks = [];
+    snapshot.forEach((doc) => {
+      bloodbanks.push({ id: doc.id, ...doc.data() });
+    });
+    const BloodBankDetails = BloodUnit(bloodbanks, Comp_Blood);
+    res.status(200).send(BloodBankDetails);
+  } catch (error) {
     console.log(error);
     return res
-    .status(500)
-    .json({ success: false, message: "internal sever error" });
-  }});
-
-
-  router.get("/requirement",async(req, res)=> {
-
-
-
-    try{
-      let bloodtype = req.body.blood_group;
-      let city = _.lowerCase(req.body.city);
-    
-      const BloodBank = db.collection('bloodbanks');
-      const Comp_Blood = getCompatibleBloodTypes(bloodtype);
-      
-    
-      // BloodBank.find({ city: city }, function (err, bloodbanks) {
-      //   if (err) {
-      //     console.log(err);
-      //   }
-      const bloodbanks = await BloodBank.get();
-      
-        const BloodBankDetails = BloodUnit(bloodbanks, Comp_Blood);
-       
-        console.log(bloodbanks.data);
-        res
-        .cookie('BloodBankDeatils',BloodBankDetails)
-        .send(BloodBankDetails)
-    
-      }catch(error){
-        console.log(error);
-        return res
-        .status(500)
-        .json({ success: false, message: "internal sever error" });
-      }});
-    
-
-// router.get("/requirement", function (req, res) {
-//   let bloodtype = req.body.blood_group;
-//   let city = req.body.city;
-
-//   const Comp_Blood = getCompatibleBloodTypes(bloodtype);
-//   BloodBank.find({ city: city }, function (err, bloodbanks) {
-//     if (err) {
-//       console.log(err);
-//     }
-
-//     const BloodBankDetails = BloodUnit(bloodbanks, Comp_Blood);
-//     console.log(BloodBankDetails);
-//     res.send(BloodBankDetails);
-//   });
-// });
-
-router.post("/donor", async (req, res)=> {
-try{
-  
-  const city = req.body.city
-  console.log(req.body)
-  const donors = db.collection('donors');
-  const donor = {
-    first_name: req.body.firstname,
-    last_name: req.body.lastname,
-    blood_group: req.body.blood_group,
-    age: req.body.age,
-    city: req.body.city,
-    phoneNumber: req.body.phoneNumber,
-  };
-  const d = await donors.add(donor);
-  const BloodBank = db.collection('bloodbanks');
-  const bloodbanks = await BloodBank.where('city', '==', city).get();
-    let BBs = [];
-  var i =0;
-  bloodbanks.forEach(doc => {
-
-    BBs[i] = doc.data();
-    i++;
-    console.log(doc.data())
- 
-  });
-
-    res.cookie('bloodbank',{BBs}, {
-      httpOnly: true,
-    }).send(BBs)
-  
-}catch(error){
-  console.log(error);
-  return res
-  .status(500)
-  .json({ success: false, message: "internal sever error" });
-}
+      .status(500)
+      .json({ success: false, message: "internal sever error" });
+  }
 });
 
-router.get("/donor", async (req, res)=> {
-  
-  const bbs  = req.cookies;
-  console.log(bbs)
-  return bbs;
+router.post("/donor", async (req, res) => {
+  try {
+    const donors = db.collection("donors");
+    const city = _.lowerCase(req.body.city);
+    const donor = {
+      first_name: req.body.firstname,
+      last_name: req.body.lastname,
+      blood_group: req.body.blood_group,
+      age: req.body.age,
+      city: city,
+      phoneNumber: req.body.phoneNumber,
+    };
+    await donors.add(donor);
+    const BloodBank = db.collection("bloodbanks");
+    const snapshot = await BloodBank.where("city", "==", city).get();
+    let bloodbanks = [];
+    snapshot.forEach((doc) => {
+      bloodbanks.push({ id: doc.id, ...doc.data() });
+    });
+
+    res.status(200)
+      .send(bloodbanks);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "internal sever error" });
+  }
 });
 
 router.get("/bloodBank", restrictToBloodBank, async (req, res) => {
   try {
-    const BloodBank = db.collection('bloodbanks');
-    
-    const id = req.id;
-    const RequiredBloodBank = await BloodBank.doc(id).get();
-    console.log(RequiredBloodBank.data())
- 
-   const BB = RequiredBloodBank.data();
-     
- 
+    const docRef = db.collection("bloodbanks").doc(req.id);
+    const doc = await docRef.get();
+    const RequiredBloodBank = doc.data();
     return res
       .status(200)
-      .json({ success: true, BloodUnit:BB.BloodGroup});
+      .json({ success: true, BloodUnit: RequiredBloodBank.BloodGroup });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, message: "process failed" });
@@ -240,43 +146,16 @@ router.get("/bloodBank", restrictToBloodBank, async (req, res) => {
 
 router.post("/bloodBank/update", restrictToBloodBank, async (req, res) => {
   try {
-    const blood_available = req.body;
-    const BloodBank = db.collection('bloodbanks');
-    const id = req.id;
-    const RequiredBloodBank = await BloodBank.doc(id).get();
-   
-    const BB = RequiredBloodBank.data();
-    // const blood = BB.BloodGroup;
-    // console.log(blood[blood_available.bloodGroup])
-      
- 
-    var blood_unit = new BloodType({
-      A_pos:BB.BloodGroup.A_pos,
-      B_pos: BB.BloodGroup.B_pos,
-      AB_pos: BB.BloodGroup.AB_pos,
-      O_pos: BB.BloodGroup.O_pos,
-      A_neg: BB.BloodGroup.A_neg,
-      B_neg: BB.BloodGroup.B_neg,
-      AB_neg: BB.BloodGroup.AB_neg,
-      O_neg: BB.BloodGroup.O_neg,
+    const docRef = db.collection("bloodbanks").doc(req.id);
+    const doc = await docRef.get();
+    const BB = doc.data();
+    const BloodGroup = BB.BloodGroup;
+    BloodGroup[req.body.bloodGroup] = parseInt(req.body.bloodUnit);
+
+    await db.collection("bloodbanks").doc(req.id).update({
+      'BloodGroup': BloodGroup,
     });
-    blood_unit[blood_available.BloodGroup] = parseInt(blood_available.unit);
-    
-    db.collection('bloodbanks').doc(id).update({
-      'BloodGroup.A_pos' : blood_unit.A_pos,
-      'BloodGroup.B_pos': blood_unit.B_pos,
-      'BloodGroup.AB_pos': blood_unit.AB_pos,
-      'BloodGroup.O_pos': blood_unit.O_pos,
-      'BloodGroup.A_neg': blood_unit.A_neg,
-      'BloodGroup.B_neg': blood_unit.B_neg,
-      'BloodGroup.AB_neg': blood_unit.AB_neg,
-      'BloodGroup.O_neg': blood_unit.O_neg
-    
-    })
-   
-    return res
-      .status(200)
-      .json({ success: true, BloodUnit:BB.BloodGroup });
+    return res.status(200).json({ success: true, BloodUnit: BloodGroup });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, message: "process failed" });

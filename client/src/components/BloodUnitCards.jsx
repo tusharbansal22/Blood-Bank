@@ -10,17 +10,16 @@ function BloodIUnitCards(){
   const {state} = useLocation();
 
   const bbs  = state.cards
-  console.log(bbs);
 
-  const render_BloodBank = bbs.map((bb)=>
-  <div className="card">
+  const render_BloodBank = bbs.map((bb, i)=>
+  <div className="card" key={i}>
 
               <p>Name : {bb.hosp.name}</p>
               <p>Contact :{bb.hosp.ContactNumber} </p>
-              <p>City: {bb.hosp.city}</p> 
-               {bb.compatibleBlood.map((Comp_blood)=>{
+              <p>City: {bb.hosp.city[0].toUpperCase() + bb.hosp.city.slice(1)}</p> 
+               {bb.compatibleBlood.map((Comp_blood,i)=>{
                 return(
-                    <div>
+                    <div key={i}>
                     <span>{Comp_blood.blood}:  </span>
                     <span>{Comp_blood.unit}</span>
                     </div>
